@@ -38,16 +38,40 @@ api.post('/api/notes', (req, res) => {
             parsedNotes.push(newNotes);
 
             // write new notes to the file
-            fs.writeFile('./db/db.json', )
+            fs.writeFile('./db/db.json', JSON.stringify(parsedNotes), (err) => {
+                err ? console.error(err) : console.log('New notes added!');
+            })
         }
     })
 
-    displayHistory.push(newNotes);
-    fs.writeFile('db/db.json', JSON.stringify(displayHistory));
-    console.log(displayHistory);
-    res.json(displayHistory);
+    const response = {
+        status: 'success',
+        body: newNotes,
+    }
+
+    console.log(response);
+    res.status(201).json(response);
 })
 
 api.delete('/api/notes/:id', (req, res) => {
-    let 
+    if (req.body && req.params.id) {
+        console.info(`${req.method} request received to delete a note`);
+        let data = fs.readFile('./db/db.json', 'utf8');
+        const parsedData = JSON.parse(data);
+        const newData = [];
+    
+        for (let x = 0; x < parsedData.length; x++) {
+            if (parsedData[x].id !== req.params.id) {
+                newData.push(parsedData[x]);
+            }
+        }
+
+        fs.writeFile('db/db/json', JSON.stringify(newData));
+        res.json("Note deleted");
+        console.info(`New Note: ${parsedData}`);
+        return;
+    }
+    res.status(404).json(`ID not found`);
 })
+
+module.exports = api;
