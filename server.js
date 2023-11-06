@@ -1,29 +1,16 @@
 const express = require('express');
 const path = require('path');
-// api here?
-// middleware here?
+const apiRouter = require('./routes/api.js');
+const homepageRouter = require('./routes/hp.js');
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 const app = express();
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-
 app.use(express.static('public'));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/index.html'));
-})
-
-app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/notes.html'));
-})
-
-app.get('*', (req, res) => {
-    res.send('Sorry, the page you are trying to reach is non-existent.');
-})
+app.use(apiRouter);
+app.use(homepageRouter);
 
 app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`);
