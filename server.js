@@ -1,16 +1,23 @@
 const express = require('express');
+const path = require('path');
 const apiRouter = require('./routes/api.js');
-const homepageRouter = require('./routes/hp.js');
+const pageRouter = require('./routes/html.js');
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.port || 3001;
+
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended:true }));
 app.use(express.static('public'));
+app.use(pageRouter);
 app.use(apiRouter);
-app.use(homepageRouter);
+
+app.get('*', (req, res) => {
+    res.send('Sorry, the page you are trying to reach is non-existent.');
+})
 
 app.listen(PORT, () => {
-    console.log(`http://localhost:${PORT}`);
+    console.log(`App listening at http://localhost:${PORT}`);
 })
+
