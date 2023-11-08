@@ -4,8 +4,8 @@ const fs = require('fs');
 // const { readFile, writeFile } = require('fs/promises');
 
 // get request to /api/notes
-api.get('/api/notes', (req, res) => {
-    const data = require('../db/db.json');
+api.get('/api/notes', async (req, res) => {
+    const data = await require('../db/db.json');
     res.json(data);
 
     // res.json(parsedData);
@@ -22,14 +22,31 @@ api.post('/api/notes', (req, res) => {
         id: uuid()
     }
     data.push(newData);
-    fs.writeFile('./db/db.json', JSON.stringify(data), (e, d) => {
-        e ? console.error(e) : console.log('Success! Check your db.json file.');
+    fs.writeFile('./db/db.json', JSON.stringify(data), (e) => {
+        e ? console.error(e) : console.log('Success! Check your db.json file!');
     });
     res.json(data);
 })
 
+api.delete('/api/notes/:id', (req, res) => {
+    const data = require('../db/db.json');
+    if (req.body && req.params.id) {
+        console.log(`${req.method} request received to delete a note`);
+        const newData = [];
 
-
+        for (let x = 0; x < data.length; x++) {
+            if (data[x].id !== req.params.id) {
+                newData.push(data[x]);
+            }
+        }
+        fs.writeFile('./db/db.json', JSON.stringify(newData), (e) => {
+            e ? console.error(e) : console.log('New Notes Updated (After Deletion)!');
+        });
+        res.json('Note deleted');
+        console.log(`New Notes: ${data}`);
+        return;
+    }
+    res.status(404).json(`ID not found`);
+})
 
 module.exports = api;
-
