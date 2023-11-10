@@ -3,7 +3,7 @@ const uuid = require('../helpers/uuid');
 const fs = require('fs');
 
 // get request to /api/notes
-api.get('/api/notes', async (req, res) => {
+api.get('/notes', async (req, res) => {
     const data = await JSON.parse(fs.readFileSync("db/db.json","utf8"));
     res.json(data);
 
@@ -12,7 +12,7 @@ api.get('/api/notes', async (req, res) => {
 })
 
 // post request to /api/notes
-api.post('/api/notes', (req, res) => {
+api.post('/notes', (req, res) => {
     const data = JSON.parse(fs.readFileSync("db/db.json","utf8"));
     console.log(data);
     const newData = {
@@ -27,7 +27,7 @@ api.post('/api/notes', (req, res) => {
     res.json(data);
 })
 
-api.delete('/api/notes/:id', (req, res) => {
+api.delete('/notes/:id', (req, res) => {
     const data = JSON.parse(fs.readFileSync("db/db.json","utf8"));
     if (req.body && req.params.id) {
         console.log(`${req.method} request received to delete a note`);

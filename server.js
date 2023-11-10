@@ -10,12 +10,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended:true }));
 app.use(express.static('public'));
-app.use(pageRouter);
-app.use(apiRouter);
+app.use('/api', apiRouter);
+app.use('/', pageRouter);
 
-app.get('*', (req, res) => {
-    res.send('Sorry, the page you are trying to reach is non-existent.');
-})
 
 app.listen(PORT, () => {
     console.log(`App listening at http://localhost:${PORT}`);
